@@ -11,5 +11,5 @@ export class LibroCard {
   autor:string = "Robert C. Martin";
   anio:number = 2008;
   categoria:string = "Buenas prácticas";
-  copias:number = 3;
+  copias:number = 0;
 }

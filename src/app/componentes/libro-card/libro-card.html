@@ -1,8 +1,20 @@
-<h3>{{ categoria }}</h3>
-<h3 class="titulo">{{ titulo.charAt(0) }}</h3>
-<h3 class="titulo">{{ titulo }}</h3>
-<p>{{ autor.toUpperCase() }}</p>
-<p>{{ anio }}</p>
-<p class="agotado">{{ copias > 0 ? ("Disponible " + copias + " copias") : "Agotado"}}</p>
-<button>Solicitar Prestamo</button>
+<article class="card book-card h-100">
+    <div class="cover cv-1" role="img">
+        <span class="cover-letter">{{ titulo.charAt(0) }}</span>
+        <span class="cover-cat">{{categoria}}</span>
+    </div>
+    <div class="card-body d-flex flex-column p-4">
+        <h3 class="titulo mb-1">{{ titulo }}</h3>
+        <p class="small muted mb-3">{{ autor.toUpperCase() }} - {{ anio }}</p>
+        <p class="mb-4">
+            <span class="pill">{{ copias > 0 ? ("Disponible " + copias + " copias") : "Agotado"}}</span>
+        </p>
+        <button 
+            type="button"
+            class="btn btn-primary w-100 mt-auto py-2"
+            >
+            Solicitar Prestamo
+        </button>
+    </div>
+</article>
 
