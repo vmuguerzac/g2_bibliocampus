@@ -1,11 +1,16 @@
 <article class="card book-card h-100">
-    <div class="cover cv-1" [class.sold]="agotado()" role="img">
-        <span class="cover-letter">{{ titulo.charAt(0) }}</span>
-        <span class="cover-cat">{{categoria}}</span>
-    </div>
+    @if(libro().portadaUrl){
+        <img class="cover-img" [src]="libro().portadaUrl">
+    }@else {
+        <div class="cover cv-1" [class.sold]="agotado()" role="img">
+            <span class="cover-letter">{{ libro().titulo.charAt(0) }}</span>
+            <span class="cover-cat">{{ libro().categoria}}</span>
+        </div>
+    }
+    
     <div class="card-body d-flex flex-column p-4">
-        <h3 class="titulo mb-1">{{ titulo }}</h3>
-        <p class="small muted mb-3">{{ autor.toUpperCase() }} - {{ anio }}</p>
+        <h3 class="titulo mb-1">{{ libro().titulo }}</h3>
+        <p class="small muted mb-3">{{ libro().autor.toUpperCase() }} - {{ libro().anio }}</p>
         <p class="mb-4">
             <span class="pill" 
                 [class.pill-ok]="!agotado()"
