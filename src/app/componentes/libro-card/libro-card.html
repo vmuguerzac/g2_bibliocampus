@@ -1,5 +1,5 @@
 <article class="card book-card h-100">
-    <div class="cover cv-1" role="img">
+    <div class="cover cv-1" [class.sold]="agotado()" role="img">
         <span class="cover-letter">{{ titulo.charAt(0) }}</span>
         <span class="cover-cat">{{categoria}}</span>
     </div>
@@ -7,13 +7,19 @@
         <h3 class="titulo mb-1">{{ titulo }}</h3>
         <p class="small muted mb-3">{{ autor.toUpperCase() }} - {{ anio }}</p>
         <p class="mb-4">
-            <span class="pill">{{ copias > 0 ? ("Disponible " + copias + " copias") : "Agotado"}}</span>
+            <span class="pill" 
+                [class.pill-ok]="!agotado()"
+                [class.pill-no]="agotado()">
+                {{ etiqueta() }}
+            </span>
         </p>
         <button 
             type="button"
             class="btn btn-primary w-100 mt-auto py-2"
+            [disabled]="agotado()"
+            (click)="alSolicitar()"
             >
-            Solicitar Prestamo
+            {{ agotado() ? 'Sin copias disponibles' : 'Solicitar Prestamo'}}
         </button>
     </div>
 </article>

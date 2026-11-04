@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { LibroCard } from '../libro-card/libro-card';
 
 @Component({
-  imports: [],
+  imports: [LibroCard],
   selector: 'app-libro-lista',
   styleUrl: './libro-lista.css',
   templateUrl: './libro-lista.html',
