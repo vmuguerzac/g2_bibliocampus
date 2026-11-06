@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { Libro } from '../../modelos/libro';
 
 @Component({
@@ -8,7 +8,8 @@ import { Libro } from '../../modelos/libro';
   templateUrl: './libro-card.html',
 })
 export class LibroCard {
-  libro = input.required<Libro>();
+  libro = input.required<Libro>(); // comunicacion Padre -> hijo
+  prestamoSolicitado = output<Libro>(); // comunicacion Hijo -> Padre
 
   protected agotado = computed(()=> this.libro().copiasDisponibles === 0);
   protected etiqueta = computed(() =>
@@ -17,8 +18,8 @@ export class LibroCard {
 
   );
 
-  protected alSolicitar():void {
-    this.libro().copiasDisponibles -- ;
+  protected alSolicitar():void { // al hacer click se llama a esta funcion
+    this.prestamoSolicitado.emit(this.libro());
   }
 
 }
