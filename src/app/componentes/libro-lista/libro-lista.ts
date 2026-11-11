@@ -1,7 +1,8 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { LibroCard } from '../libro-card/libro-card';
 import { Libro } from '../../modelos/libro';
 import { LIBROS } from '../../datos/libros';
+import { LibroService } from '../../services/libro-service';
 
 @Component({
   imports: [LibroCard],
@@ -10,19 +11,26 @@ import { LIBROS } from '../../datos/libros';
   templateUrl: './libro-lista.html',
 })
 export class LibroLista {
-  protected libros = signal<Libro[]>(LIBROS);
+  // Injectar LibroService
+  private libroService = inject(LibroService);
+
+  protected libros = signal<Libro[]>([]);
   protected borrador = signal(''); // lo que se escribe
   protected terminoBusqueda = signal(''); // lo que buscar al hacer click en buscar
   protected mensaje = signal<string|null>(null);
+  protected cargando = signal(true);
 
-  protected librosVisibles = computed(() => {
-    const temp = this.terminoBusqueda().toLocaleLowerCase();
-    return this.libros().filter(
-      (l) => !temp || 
-             l.titulo.toLowerCase().includes(temp) ||
-             l.autor.toLowerCase().includes(temp)
-    )
-  });
+  constructor(){
+    this.cargar();
+  }
+  
+  private cargar():void {
+    this.cargando.set(true);
+    this.libroService.listar(this.terminoBusqueda()).subscribe((librosServicio) =>{
+      this.libros.set(librosServicio);
+      this.cargando.set(false);
+    });
+  }
 
   protected alEscribir(evento:Event):void {
     this.borrador.set((evento.target as HTMLInputElement).value)
@@ -30,16 +38,14 @@ export class LibroLista {
 
   protected alBuscar():void {
     this.terminoBusqueda.set(this.borrador().trim());
+    this.cargar();
   }
 
-  protected alSolictiar(libro:Libro):void {
-    // Actualizacion es inmutable
-    this.libros.update((lista)=>
-      lista.map((l) => 
-        l.id === libro.id ? {...l, copiasDisponibles: l.copiasDisponibles -1 }:l,
-      )
-    );
-    // emitir un mensaje
-    this.mensaje.set(`Solicitaste «${libro.titulo}».`);
+  protected alSolicitar(libro:Libro):void {
+    this.libroService.descontarCopia(libro.id).subscribe(() => {
+      // emitir un mensaje
+      this.mensaje.set(`Solicitaste «${libro.titulo}».`);
+      this.cargar();
+    });
   }
 }
