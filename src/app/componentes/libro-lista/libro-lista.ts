@@ -3,6 +3,7 @@ import { LibroCard } from '../libro-card/libro-card';
 import { Libro } from '../../modelos/libro';
 import { LIBROS } from '../../datos/libros';
 import { LibroService } from '../../services/libro-service';
+import { PrestamoService } from '../../services/prestamo-service';
 
 @Component({
   imports: [LibroCard],
@@ -13,6 +14,7 @@ import { LibroService } from '../../services/libro-service';
 export class LibroLista {
   // Injectar LibroService
   private libroService = inject(LibroService);
+  private prestamoService = inject(PrestamoService);
 
   protected libros = signal<Libro[]>([]);
   protected borrador = signal(''); // lo que se escribe
@@ -42,8 +44,7 @@ export class LibroLista {
   }
 
   protected alSolicitar(libro:Libro):void {
-    this.libroService.descontarCopia(libro.id).subscribe(() => {
-      // emitir un mensaje
+    this.prestamoService.solicitar(libro).subscribe(()=> {
       this.mensaje.set(`Solicitaste «${libro.titulo}».`);
       this.cargar();
     });
