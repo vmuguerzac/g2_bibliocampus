@@ -21,6 +21,7 @@ export class LibroLista {
   protected terminoBusqueda = signal(''); // lo que buscar al hacer click en buscar
   protected mensaje = signal<string|null>(null);
   protected cargando = signal(true);
+  protected error = signal(false);
 
   constructor(){
     this.cargar();
@@ -28,9 +29,15 @@ export class LibroLista {
   
   private cargar():void {
     this.cargando.set(true);
-    this.libroService.listar(this.terminoBusqueda()).subscribe((librosServicio) =>{
-      this.libros.set(librosServicio);
-      this.cargando.set(false);
+    this.libroService.listar(this.terminoBusqueda()).subscribe({
+      next: (librosServidor) =>{
+        this.libros.set(librosServidor);
+        this.cargando.set(false);
+      },
+      error: () => {
+        this.error.set(true);
+        this.cargando.set(false);
+      }
     });
   }
 
